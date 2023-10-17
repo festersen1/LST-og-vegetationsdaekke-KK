@@ -27,7 +27,7 @@ function cleanUpAllLandsat(image) {
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~
-//    Landsat mean 1984-2022
+//    Landsat
 // ~~~~~~~~~~~~~~~~~~~~~~~~
 var landsat8 = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
   .filterDate('2013-06-01','2030-12-31')
@@ -54,27 +54,12 @@ var landsat9 = ee.ImageCollection('LANDSAT/LC09/C02/T1_L2')
   return image.addBands(ndvi).addBands(image.metadata('system:time_start').divide(1e18)).addBands(thermal).set('system:time_start', image.get('system:time_start')).set('Date', ee.Date(image.get('system:time_start')));  
   }); 
 
-
-var landsat5 = ee.ImageCollection('LANDSAT/LT05/C02/T1_L2')
-.filterBounds(graense_poly)
-.map(cleanUpAllLandsat)
-.filterDate('1984-06-01', '2013-12-31')
-.map(function(image) {
-       var ndvi = image.normalizedDifference(['SR_B4', 'SR_B3']).rename('NDVI')
-      .reproject('EPSG:25832', null, 30)
-      var thermal = image.select('ST_B6').multiply(0.00341802).add(149.0).subtract(272.15).rename('LST').reproject('EPSG:25832', null, 30)
-      var timeband = ee.Number(image.get('system:time_start'));
- return image.addBands(ndvi).addBands(image.metadata('system:time_start').divide(1e18)).addBands(thermal).set('system:time_start', image.get('system:time_start')).set('Date', ee.Date(image.get('system:time_start')));  
-  }); 
   
 // Combine images
-var LST_all = landsat5.merge(landsat8)
+var LST_all = landsat8.merge(landsat9)
 
 //*** Visulisering af sommertemperaturer***
-// Filtrering af image collection
-var LSTMap2017 = LST_all.select('LST').filterDate('2017-07-01', '2017-08-10').mean()
-var LSTMap2018 = LST_all.select('LST').filterDate('2018-06-15', '2018-08-01').first()
-var LSTMap2019 = LST_all.select('LST').filterDate('2019-07-01', '2019-08-10').mean()
+// Filtrering af image collection baseret på manuel udvælgelse af billeder 
 var LSTMap2020 = LST_all.select('LST').filterDate('2020-08-10', '2020-08-12').first()
 var LSTMap2021 = LST_all.select('LST').filterDate('2021-08-22', '2021-08-24').first()
 var LSTMap2022 = LST_all.select('LST').filterDate('2022-06-12', '2022-08-30').first()
