@@ -84,7 +84,6 @@ var UCIVisParam = {
 }
 
 // Visualiser i kortet (visning er sat til false, så man aktivt skal vælge dem til)
-Map.addLayer(LSTMap2017,LSTVisparam,'LST 2017 sommer',false)
 Map.addLayer(LSTMap2020,LSTVisparam,'LST 2020 sommer',false)
 Map.addLayer(LSTMap2021,LSTVisparam,'LST 2021 sommer',false)
 Map.addLayer(LSTMap2022,LSTVisparam,'LST 2022 sommer',false)
